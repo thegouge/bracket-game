@@ -1,28 +1,33 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+	<div id="app">
+		<Create v-if="start" @create-bracket="initBracket" />
+		<Bracket v-else :numPlayers="this.bracketSize" />
+	</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Create from "./components/Create";
+import Bracket from "./components/Bracket";
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+	name: "App",
+	components: {
+		Create,
+		Bracket,
+	},
+	data() {
+		return {
+			start: true,
+			bracketSize: 0,
+		};
+	},
+	methods: {
+		initBracket(payload) {
+			this.bracketSize = parseInt(payload);
+			this.start = false;
+		},
+	},
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>
