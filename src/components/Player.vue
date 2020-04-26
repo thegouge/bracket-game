@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="player">
     <span @click="toggleModal" title="edit this player's icon">
       <img class="player-img" :src="image" alt="PlayerIcon" />
     </span>
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import blankImage from "../assets/blank.jpg";
+import { store } from "../store";
 
 export default {
   name: "Player",
@@ -22,7 +22,12 @@ export default {
     }
   },
   data() {
-    return { isModal: false, image: blankImage };
+    return { isModal: false };
+  },
+  computed: {
+    image() {
+      return this.player.icon;
+    }
   },
   methods: {
     toggleModal() {
@@ -37,26 +42,41 @@ export default {
       var reader = new FileReader();
 
       reader.onload = e => {
-        this.image = e.target.result;
+        store.updatePlayerImage(this.player.id, e.target.result);
       };
       reader.readAsDataURL(file);
+      this.toggleModal();
     }
   }
 };
 </script>
 
 <style scoped>
-.container {
+.player {
+  border: 1px solid red;
+  position: relative;
   display: flex;
   align-items: center;
+  justify-content: space-around;
+  padding: 0.5rem;
 }
 
 span {
   box-sizing: border-box;
   border-radius: 50%;
+  margin: 2px;
 }
 span:hover {
   border: 2px solid orange;
+  margin: 0;
+}
+
+.modal {
+  position: absolute;
+  top: 10px;
+  background: black;
+  color: white;
+  width: 10rem;
 }
 
 .player-img {

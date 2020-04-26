@@ -1,24 +1,22 @@
 <template>
   <main>
     <ul>
-      <li v-for="player in players" :key="player.id">
-        <Player :player="player" />
+      <li v-for="match in matches" :key="match.id">
+        <Match :index="match.id" />
       </li>
     </ul>
   </main>
 </template>
 
 <script>
-// import Match from "./Match";
-import Player from "./Player";
+import Match from "./Match";
 
-import blankImage from "../assets/blank.jpg";
+import { store } from "../store";
 
 export default {
   name: "Bracket",
   components: {
-    // Match,
-    Player
+    Match
   },
   props: {
     numPlayers: {
@@ -26,19 +24,15 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      players: store.players,
+      matches: store.matches
+    };
+  },
   computed: {
-    matches() {
-      return this.numPlayers - 1;
-    },
     rounds() {
       return Math.sqrt(this.numPlayers);
-    },
-    players() {
-      const result = [];
-      for (let i = 0; i < this.numPlayers; i++) {
-        result[i] = { name: "", id: i, icon: blankImage };
-      }
-      return result;
     }
   }
 };
@@ -47,5 +41,6 @@ export default {
 <style scoped>
 ul {
   list-style: none;
+  padding: 1rem;
 }
 </style>
