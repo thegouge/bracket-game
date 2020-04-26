@@ -25,7 +25,7 @@ export default {
   props: {
     player: {
       type: Object,
-      required: false
+      required: true
     },
     readonly: {
       type: Boolean,

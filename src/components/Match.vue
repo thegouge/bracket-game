@@ -18,6 +18,8 @@
       >{{player.name}}</option>
     </select>
     <button v-if="picked" @click="confirmWinner">Game Master Confirm</button>
+
+    <div class="bracket-lines" v-if="deets.id % 2 === 1"></div>
   </li>
 </template>
 
@@ -39,14 +41,17 @@ export default {
   },
   data() {
     return {
-      picked: false,
-      readonly: false
+      picked: false
     };
+  },
+  computed: {
+    readonly() {
+      return this.deets.players[0].id < 0 && this.deets.players[1].id < 0;
+    }
   },
   methods: {
     pickWinner(e) {
       this.picked = store.players[e.target.value];
-      console.log(this.picked);
     },
     confirmWinner() {
       this.readonly = true;
@@ -66,7 +71,6 @@ export default {
 }
 p {
   box-sizing: border-box;
-  width: 10%;
   padding: 5%;
 }
 </style>

@@ -1,5 +1,3 @@
-import blankImage from "./assets/blank.jpg";
-
 export const store = {
 	players: [],
 	rounds: [],
@@ -8,7 +6,7 @@ export const store = {
 			this.players.push({
 				name: `Player ${i + 1}`,
 				id: i,
-				icon: blankImage,
+				icon: "",
 			});
 		}
 		this.initRounds();
@@ -19,27 +17,30 @@ export const store = {
 	initRounds() {
 		const numPlayers = this.players.length;
 		const maxRounds = Math.sqrt(numPlayers);
-		let roundMatches = numPlayers;
+		let roundMatches = numPlayers * 2;
 		let counter = 0;
 
 		for (let i = 0; i < maxRounds; i++) {
 			roundMatches /= 2;
 			const matches = [];
 
-			for (let j = 0; j < roundMatches + 1; j += 2) {
+			for (let j = 0; j < roundMatches; j += 2) {
+				const lastRound = this.rounds[i - 1];
 				matches.push({
 					id: counter++,
 					winner: "",
 					round: i,
-					players: this.rounds[i - 1]
+					players: lastRound
 						? [
 								{
-									name: `winner of ${this.rounds[i - 1].matches[j].id + 1}`,
-									id: 0,
+									name: `winner of ${lastRound.matches[j].id + 1}`,
+									id: -1,
+									winnerOf: lastRound.matches[j].id,
 								},
 								{
-									name: `winner of ${this.rounds[i - 1].matches[j + 1].id + 1}`,
-									id: 1,
+									name: `winner of ${lastRound.matches[j + 1].id + 1 || "???"}`,
+									id: -2,
+									winnerOf: lastRound.matches[j + 1].id,
 								},
 								// eslint-disable-next-line no-mixed-spaces-and-tabs
 						  ]
@@ -54,6 +55,17 @@ export const store = {
 		}
 	},
 	lockWinner(round, match, player) {
-		this.rounds[round].matches[match].winner = player;
+		const currMatch = this.rounds[round].matches[match];
+		currMatch.winner = player;
+		this.rounds[round + 1].matches.some((match) => {
+			if (match.players[0].winnerOf === currMatch.id) {
+				match.players[0] = player;
+				return true;
+			} else if (match.players[1].winnerOf === currMatch.id) {
+				match.players[1] = player;
+				return true;
+			}
+			return false;
+		});
 	},
 };
