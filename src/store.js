@@ -2,39 +2,58 @@ import blankImage from "./assets/blank.jpg";
 
 export const store = {
 	players: [],
-	matches: [],
+	rounds: [],
 	initPlayers(numPlayers) {
 		for (let i = 0; i < numPlayers; i++) {
 			this.players.push({
-				name: "",
+				name: `Player ${i + 1}`,
 				id: i,
 				icon: blankImage,
 			});
 		}
-		this.initMatches();
+		this.initRounds();
 	},
 	updatePlayerImage(index, image) {
 		this.players[index].icon = image;
 	},
-	initMatches() {
+	initRounds() {
+		const numPlayers = this.players.length;
+		const maxRounds = Math.sqrt(numPlayers);
+		let roundMatches = numPlayers;
 		let counter = 0;
-		const total = this.players.length;
-		for (let i = 0; i < total; i++) {
-			if (this.players[i]) {
-				this.matches.push({
+
+		for (let i = 0; i < maxRounds; i++) {
+			roundMatches /= 2;
+			const matches = [];
+
+			for (let j = 0; j < roundMatches + 1; j += 2) {
+				matches.push({
 					id: counter++,
 					winner: "",
-					versus: [this.players[i], this.players[i + 1]],
+					round: i,
+					players: this.rounds[i - 1]
+						? [
+								{
+									name: `winner of ${this.rounds[i - 1].matches[j].id + 1}`,
+									id: 0,
+								},
+								{
+									name: `winner of ${this.rounds[i - 1].matches[j + 1].id + 1}`,
+									id: 1,
+								},
+								// eslint-disable-next-line no-mixed-spaces-and-tabs
+						  ]
+						: [this.players[j], this.players[j + 1]],
 				});
-				i++;
-			} else {
-				// this.matches.push({
-				//   id: counter++,
-				// 	winner: "",
-				// 	versus: [this.matches[].winner, this.matches[].winner],
-				// });
 			}
+
+			this.rounds.push({
+				number: i + 1,
+				matches,
+			});
 		}
-		console.log(this.matches);
+	},
+	lockWinner(round, match, player) {
+		this.rounds[round].matches[match].winner = player;
 	},
 };

@@ -1,22 +1,18 @@
 <template>
   <main>
-    <ul>
-      <li v-for="match in matches" :key="match.id">
-        <Match :index="match.id" />
-      </li>
-    </ul>
+    <Round v-for="round in rounds" :key="`round-${round.number}`" :round="round" />
   </main>
 </template>
 
 <script>
-import Match from "./Match";
+import Round from "./Round";
 
 import { store } from "../store";
 
 export default {
   name: "Bracket",
   components: {
-    Match
+    Round
   },
   props: {
     numPlayers: {
@@ -27,20 +23,15 @@ export default {
   data() {
     return {
       players: store.players,
-      matches: store.matches
+      rounds: store.rounds
     };
-  },
-  computed: {
-    rounds() {
-      return Math.sqrt(this.numPlayers);
-    }
   }
 };
 </script>
 
 <style scoped>
-ul {
-  list-style: none;
-  padding: 1rem;
+main {
+  display: flex;
+  text-align: center;
 }
 </style>

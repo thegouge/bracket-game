@@ -1,29 +1,29 @@
 <template>
-  <div class="match" :id="deets.id">
+  <li class="match" :id="deets.id">
     <p>{{deets.id + 1}}</p>
     <div class="players">
-      <Player :player="deets.versus[0]" />
-      <Player :player="deets.versus[1]" />
+      <Player
+        v-for="player in deets.players"
+        :key="player.id"
+        :player="player"
+        :readonly="deets.round >= 1"
+      />
     </div>
-    <select
-      class="winner"
-      :id="`${deets.id}-winner`"
-      @change="pickWinner"
-      :readonly="this.readonly"
-    >
+    <select v-if="!readonly" class="winner" :id="`${deets.id}-winner`" @change="pickWinner">
       <option value selected>-</option>
       <option
-        v-for="player in deets.versus"
+        v-for="player in deets.players"
         :key="`${player.id}-option`"
         :value="player.id"
       >{{player.name}}</option>
     </select>
     <button v-if="picked" @click="confirmWinner">Game Master Confirm</button>
-  </div>
+  </li>
 </template>
 
 <script>
 import Player from "./Player";
+
 import { store } from "../store";
 
 export default {
@@ -32,25 +32,26 @@ export default {
     Player
   },
   props: {
-    index: {
-      type: Number,
+    deets: {
+      type: Object,
       required: true
     }
   },
   data() {
     return {
-      deets: store.matches[this.index],
       picked: false,
       readonly: false
     };
   },
   methods: {
-    pickWinner() {
-      this.picked = true;
+    pickWinner(e) {
+      this.picked = store.players[e.target.value];
+      console.log(this.picked);
     },
     confirmWinner() {
-      this.picked = false;
       this.readonly = true;
+      store.lockWinner(this.deets.round, this.deets.id, this.picked);
+      this.picked = false;
     }
   }
 };
