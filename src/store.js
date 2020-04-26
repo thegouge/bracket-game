@@ -56,12 +56,15 @@ export const store = {
 		}
 	},
 	lockWinner(round, match, player) {
-		const currMatch = this.rounds[round].matches[match] || false;
-		if (!currMatch) {
-			this.champ = player;
+		console.log({ round, match, player });
+		const currMatch = this.rounds[round].matches.find(
+			(item) => item.id === match
+		);
+		currMatch.winner = player;
+		if (!this.rounds[round + 1]) {
+			this.champ = true;
 			return;
 		}
-		currMatch.winner = player;
 		this.rounds[round + 1].matches.some((match) => {
 			if (match.players.p1.winnerOf === currMatch.id) {
 				match.players.p1 = player;

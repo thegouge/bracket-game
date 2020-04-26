@@ -1,7 +1,12 @@
 <template>
   <main>
     <h1 v-if="champ">{{champ}} has won the tournament!</h1>
-    <Round v-for="round in rounds" :key="`round-${round.number}`" :round="round" />
+    <Round
+      v-for="round in rounds"
+      :key="`round-${round.number}`"
+      :round="round"
+      @champ="handleChamp"
+    />
   </main>
 </template>
 
@@ -25,8 +30,13 @@ export default {
     return {
       players: store.players,
       rounds: store.rounds,
-      champ: store.champ
+      champ: false
     };
+  },
+  methods: {
+    handleChamp(champ) {
+      this.champ = champ;
+    }
   }
 };
 </script>

@@ -2,7 +2,7 @@
   <div>
     <h2>Round {{round.number}}</h2>
     <ul>
-      <Match v-for="match in round.matches" :key="match.id" :deets="match" />
+      <Match v-for="match in round.matches" :key="match.id" :deets="match" @champ="handleChamp" />
     </ul>
   </div>
 </template>
@@ -19,8 +19,10 @@ export default {
       required: true
     }
   },
-  beforeUpdate() {
-    console.log("updating Round!");
+  methods: {
+    handleChamp(player) {
+      this.$emit("champ", player.name);
+    }
   }
 };
 </script>

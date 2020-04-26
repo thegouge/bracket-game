@@ -5,7 +5,7 @@
       <Player :player="deets.players.p1" />
       <Player :player="deets.players.p2" />
     </div>
-    <select v-if="!readonly" class="winner" :id="`${deets.id}-winner`" @change="pickWinner">
+    <select v-if="!hideDdown" class="winner" :id="`${deets.id}-winner`" @change="pickWinner">
       <option value selected>winner</option>
       <option
         v-for="player in players"
@@ -41,13 +41,8 @@ export default {
     };
   },
   computed: {
-    readonly: {
-      get() {
-        return this.deets.players.p1.id < 0 && this.deets.players.p2.id < 0;
-      },
-      set(newValue) {
-        return newValue;
-      }
+    hideDdown() {
+      return this.deets.players.p1.id < 0 || this.deets.players.p2.id < 0;
     }
   },
   methods: {
@@ -56,11 +51,10 @@ export default {
     },
     confirmWinner() {
       store.lockWinner(this.deets.round, this.deets.id, this.picked);
-      this.$set(
-        this.players,
-        "players",
-        store.rounds[this.deets.round].matches[this.deets.id].players
-      );
+      this.$set(this.players, "players", this.deets.players);
+      if (store.champ) {
+        this.$emit("champ", this.picked);
+      }
       this.picked = false;
     }
   },
