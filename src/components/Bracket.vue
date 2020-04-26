@@ -1,5 +1,6 @@
 <template>
   <main>
+    <h1 v-if="champ">{{champ}} has won the tournament!</h1>
     <Round v-for="round in rounds" :key="`round-${round.number}`" :round="round" />
   </main>
 </template>
@@ -23,7 +24,8 @@ export default {
   data() {
     return {
       players: store.players,
-      rounds: store.rounds
+      rounds: store.rounds,
+      champ: store.champ
     };
   }
 };

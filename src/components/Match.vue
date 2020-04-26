@@ -2,17 +2,13 @@
   <li class="match" :id="deets.id">
     <p>{{deets.id + 1}}</p>
     <div class="players">
-      <Player
-        v-for="player in deets.players"
-        :key="player.id"
-        :player="player"
-        :readonly="deets.round >= 1"
-      />
+      <Player :player="deets.players.p1" />
+      <Player :player="deets.players.p2" />
     </div>
     <select v-if="!readonly" class="winner" :id="`${deets.id}-winner`" @change="pickWinner">
-      <option value selected>-</option>
+      <option value selected>winner</option>
       <option
-        v-for="player in deets.players"
+        v-for="player in players"
         :key="`${player.id}-option`"
         :value="player.id"
       >{{player.name}}</option>
@@ -25,7 +21,6 @@
 
 <script>
 import Player from "./Player";
-
 import { store } from "../store";
 
 export default {
@@ -41,12 +36,18 @@ export default {
   },
   data() {
     return {
-      picked: false
+      picked: false,
+      players: this.deets.players
     };
   },
   computed: {
-    readonly() {
-      return this.deets.players[0].id < 0 && this.deets.players[1].id < 0;
+    readonly: {
+      get() {
+        return this.deets.players.p1.id < 0 && this.deets.players.p2.id < 0;
+      },
+      set(newValue) {
+        return newValue;
+      }
     }
   },
   methods: {
@@ -54,10 +55,17 @@ export default {
       this.picked = store.players[e.target.value];
     },
     confirmWinner() {
-      this.readonly = true;
       store.lockWinner(this.deets.round, this.deets.id, this.picked);
+      this.$set(
+        this.players,
+        "players",
+        store.rounds[this.deets.round].matches[this.deets.id].players
+      );
       this.picked = false;
     }
+  },
+  beforeUpdate() {
+    console.log("updating Match!");
   }
 };
 </script>

@@ -18,6 +18,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  beforeUpdate() {
+    console.log("updating Round!");
   }
 };
 </script>

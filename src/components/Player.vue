@@ -26,10 +26,6 @@ export default {
     player: {
       type: Object,
       required: true
-    },
-    readonly: {
-      type: Boolean,
-      required: true
     }
   },
   data() {
@@ -38,6 +34,9 @@ export default {
   computed: {
     image() {
       return this.player.icon || blankImage;
+    },
+    readonly() {
+      return this.player.id < 0;
     }
   },
   methods: {
@@ -58,6 +57,9 @@ export default {
       reader.readAsDataURL(file);
       this.toggleModal();
     }
+  },
+  beforeUpdate() {
+    console.log("updating Player!");
   }
 };
 </script>
