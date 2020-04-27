@@ -137,7 +137,6 @@ select {
 }
 
 .confirmation {
-  position: absolute;
   top: 44%;
   left: 25%;
 }
