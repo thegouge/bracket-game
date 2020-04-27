@@ -44,6 +44,7 @@ export default {
 <style scoped>
 main {
   display: flex;
+  justify-content: start;
   text-align: center;
 }
 </style>

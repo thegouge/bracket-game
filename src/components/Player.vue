@@ -1,8 +1,13 @@
 <template>
   <div class="player">
-    <span @click="toggleModal" title="edit this player's icon">
-      <img class="player-img" :src="image" alt="PlayerIcon" />
-    </span>
+    <img
+      :class="`player-img ${readonly ? 'ro' : ''}`"
+      :src="image"
+      alt="PlayerIcon"
+      @click="readonly ? '' : toggleModal"
+      title="edit this player's icon"
+    />
+
     <input
       :class="`player-name ${readonly ? 'ro' : ''}`"
       type="text"
@@ -66,23 +71,11 @@ export default {
 
 <style scoped>
 .player {
-  border: 1px solid red;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 0.5rem;
-}
-
-span {
-  box-sizing: border-box;
-  border-radius: 50%;
-  margin: 2px;
-  cursor: pointer;
-}
-span:hover {
-  border: 2px solid orange;
-  margin: 0;
+  padding: 0 0.5rem;
 }
 
 .modal {
@@ -94,8 +87,14 @@ span:hover {
 }
 
 .player-img {
-  width: 3rem;
+  width: 2rem;
   border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.player-img:hover {
+  border: 2px solid orange;
 }
 
 .player-name {
@@ -104,5 +103,8 @@ span:hover {
 .ro {
   user-select: none;
   cursor: default;
+}
+.ro:hover {
+  border: 2px solid transparent;
 }
 </style>

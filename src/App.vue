@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <h1>Simple Bracket Game</h1>
     <Create v-if="bracketSize < 1" @create-bracket="initBracket" />
     <Bracket v-else :numPlayers="this.bracketSize" />
   </div>
@@ -36,5 +37,9 @@ export default {
 <style>
 * {
   box-sizing: border-box;
+}
+
+h1 {
+  text-align: center;
 }
 </style>

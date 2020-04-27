@@ -19,7 +19,7 @@ export const store = {
 		const numPlayers = this.players.length;
 		const maxRounds = Math.sqrt(numPlayers);
 		let roundMatches = numPlayers * 2;
-		let counter = 0;
+		let charCode = 65;
 
 		for (let i = 0; i < maxRounds; i++) {
 			roundMatches /= 2;
@@ -28,18 +28,19 @@ export const store = {
 			for (let j = 0; j < roundMatches; j += 2) {
 				const lastRound = this.rounds[i - 1];
 				matches.push({
-					id: counter++,
+					id: String.fromCharCode(charCode++),
 					winner: "",
 					round: i,
+					of: maxRounds - 1,
 					players: lastRound
 						? {
 								p1: {
-									name: `winner of ${lastRound.matches[j].id + 1}`,
+									name: `winner of ${lastRound.matches[j].id}`,
 									id: -1,
 									winnerOf: lastRound.matches[j].id,
 								},
 								p2: {
-									name: `winner of ${lastRound.matches[j + 1].id + 1 || "???"}`,
+									name: `winner of ${lastRound.matches[j + 1].id}`,
 									id: -2,
 									winnerOf: lastRound.matches[j + 1].id,
 								},
